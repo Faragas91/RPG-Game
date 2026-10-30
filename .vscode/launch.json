@@ -1,0 +1,28 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Brave: Babylon.js debuggen",
+			"type": "chrome",
+			"request": "launch",
+			"runtimeExecutable": "/usr/bin/brave-browser",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMaps": true,
+			"smartStep": true,
+			"skipFiles": ["**/node_modules/**"],
+			"userDataDir": "${workspaceFolder}/.vscode/brave-profile"
+		},
+		{
+			"name": "Edge: Babylon.js debuggen",
+			"type": "msedge",
+			"request": "launch",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMaps": true,
+			"smartStep": true,
+			"skipFiles": ["**/node_modules/**"],
+			"userDataDir": "${workspaceFolder}/.vscode/edge-profile"
+		}
+	]
+}
