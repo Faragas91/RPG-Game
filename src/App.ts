@@ -42,7 +42,9 @@ export class App {
 		});
 
 		this._scene = new Scene(this._engine);
-		this._playerController = new PlayerController(this._scene);
+		this._playerController = new PlayerController(this._scene, () => {
+			this._world?.cameraManager?.toggle();
+		});
 		this._gameLoop = new GameLoop(this._engine, this._scene);
 		await this._initializeScene();
 

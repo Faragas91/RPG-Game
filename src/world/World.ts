@@ -16,7 +16,7 @@ import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
 import { level01 } from "./levels/Level01";
 
 export class World {
-	public cameraManager: CameraManager | null = null;
+	public readonly cameraManager: CameraManager;
 	public readonly shadowGenerator: ShadowGenerator;
 	public readonly groundAggregate: PhysicsAggregate;
 	private _platformManager: PlatformManager | null = null;

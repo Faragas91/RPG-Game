@@ -2,7 +2,6 @@ import { AbstractMesh, ArcRotateCamera, Camera, Scene, Vector3 } from "@babylonj
 
 
 export class CameraManager {
-	public readonly camera: ArcRotateCamera | null = null;
 	public readonly followCamera: ArcRotateCamera;
   	public readonly isoCamera: ArcRotateCamera;
 	private _activeCamera: ArcRotateCamera;
@@ -60,7 +59,8 @@ export class CameraManager {
 	}
 
 	follow(target: AbstractMesh): void {
-		this.activeCamera?.setTarget(target, true, false, true);
+		this.followCamera?.setTarget(target, true, false, true);
+		this.isoCamera?.setTarget(target, true, false, true);
 	}
 
 	toggle(): void {
