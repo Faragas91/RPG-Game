@@ -73,11 +73,11 @@ export class App {
 		const world = new World(scene);
 		this._world = world;
 
-		const player = new Player(scene, playerController, world.camera);
+		const player = new Player(scene, playerController);
 		this._player = player;
 		gameLoop.add(player);
 
-		world.camera.setTarget(player.mesh, true, false, true);
+		world.cameraManager?.follow(player.mesh)
 		world.shadowGenerator.addShadowCaster(player.mesh);
 	}
 

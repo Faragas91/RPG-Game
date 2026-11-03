@@ -9,7 +9,6 @@ import { PhysicsAggregate } from "@babylonjs/core/Physics/v2/physicsAggregate";
 import { PhysicsShapeType } from "@babylonjs/core/Physics/v2/IPhysicsEnginePlugin";
 import { Ray } from "@babylonjs/core/Culling/ray";
 import type { Scene } from "@babylonjs/core/scene";
-import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { Axis } from "@babylonjs/core";
 
 export class Player implements IUpdatable {
@@ -24,7 +23,6 @@ export class Player implements IUpdatable {
 	public constructor(
 		scene: Scene,
 		private readonly _playerController: PlayerController,
-		private readonly _camera: ArcRotateCamera
 	) {
 		const mesh = MeshBuilder.CreateBox("Player", { size: Player.Size }, scene);
 		mesh.position = new Vector3(0, 200, 0);
@@ -48,12 +46,12 @@ export class Player implements IUpdatable {
 		
 		const x = (movement.right ? 1 : 0) - (movement.left ? 1 : 0);
 		const z = (movement.forward ? 1 : 0) - (movement.backward ? 1 : 0);
-		const cameraRight = this._camera.getDirection(Axis.X);
-		const cameraForward = this._camera.getDirection(Axis.Z);
+		const cameraRight = this.mesh.getScene().activeCamera?.getDirection(Axis.X);
+		const cameraForward = this.mesh.getScene().activeCamera?.getDirection(Axis.Z);
 
-		const cameraForwardDirection = new Vector3(cameraForward.x, 0, cameraForward.z);
+		const cameraForwardDirection = new Vector3(cameraForward?.x, 0, cameraForward?.z);
 		cameraForwardDirection.normalize();
-		const cameraRightDirection = new Vector3(cameraRight.x, 0, cameraRight.z);
+		const cameraRightDirection = new Vector3(cameraRight?.x, 0, cameraRight?.z);
 		cameraRightDirection.normalize();
 
 		const cameraMovement = new Vector3(cameraForwardDirection.x * z + cameraRightDirection.x * x, 0, cameraForwardDirection.z * z + cameraRightDirection.z * x);
