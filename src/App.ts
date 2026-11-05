@@ -1,5 +1,6 @@
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
+import { SceneLoaderFlags } from "@babylonjs/core/Loading/sceneLoaderFlags";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import { HavokPlugin } from "@babylonjs/core/Physics/v2/Plugins/havokPlugin";
 
@@ -7,10 +8,32 @@ import HavokPhysics from "@babylonjs/havok";
 
 import "@babylonjs/core/Physics";
 
+// Side-effect imports: register the loaders/components the editor scene needs.
+import "@babylonjs/core/Loading/loadingScreen";
+import "@babylonjs/core/Loading/Plugins/babylonFileLoader";
+import "@babylonjs/core/Cameras/camera";
+import "@babylonjs/core/Cameras/universalCamera";
+import "@babylonjs/core/Meshes/groundMesh";
+import "@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent";
+import "@babylonjs/core/Lights/Shadows/cascadedShadowGenerator";
+import "@babylonjs/core/Materials/PBR/pbrMaterial";
+import "@babylonjs/core/Materials/standardMaterial";
+import "@babylonjs/core/Materials/Textures/cubeTexture";
+import "@babylonjs/core/Materials/Textures/Loaders/envTextureLoader";
+import "@babylonjs/materials/sky";
+// The sky material loads its shaders lazily via dynamic imports, which can
+// race ahead of the first compile. Registering them statically is deterministic.
+import "@babylonjs/materials/sky/sky.vertex.js";
+import "@babylonjs/materials/sky/sky.fragment.js";
+
+import { loadScene } from "babylonjs-editor-tools";
+
 import { GameLoop } from "./core/GameLoop";
 import { Player } from "./game/Player";
 import { PlayerController } from "./game/PlayerController";
-import { World } from "./world/World";
+import { CameraManager } from "./world/CameraManager";
+import { LevelLoader } from "./world/LevelLoader";
+import { scriptsMap } from "./scripts";
 
 export class App {
 	private _canvas: HTMLCanvasElement;
@@ -19,7 +42,7 @@ export class App {
 	private _gameLoop: GameLoop | null = null;
 	private _player: Player | null = null;
 	private _playerController: PlayerController | null = null;
-	private _world: World | null = null;
+	private _cameraManager: CameraManager | null = null;
 
 	public constructor() {
 		const canvasElement = document.getElementById("canvas") as HTMLCanvasElement;
@@ -43,7 +66,7 @@ export class App {
 
 		this._scene = new Scene(this._engine);
 		this._playerController = new PlayerController(this._scene, () => {
-			this._world?.cameraManager?.toggle();
+			this._cameraManager?.toggle();
 		});
 		this._gameLoop = new GameLoop(this._engine, this._scene);
 		await this._initializeScene();
@@ -72,15 +95,24 @@ export class App {
 		physicsPlugin.setVelocityLimits(200 * 100, 100);
 		scene.enablePhysics(new Vector3(0, -981, 0), physicsPlugin);
 
-		const world = new World(scene);
-		this._world = world;
+		// Load the editor scene instead of building the world in code.
+		SceneLoaderFlags.ForceFullSceneLoadingForIncremental = true;
+		await loadScene("/scene/", "level01.babylon", scene, scriptsMap, {
+			quality: "high",
+		});
+
+		// Static colliders for the level geometry: ground + all platform_* meshes.
+		const levelLoader = new LevelLoader(scene);
+		levelLoader.addStaticColliders();
+
+		// Gameplay camera(s) install after the editor scene so they win activeCamera.
+		this._cameraManager = new CameraManager(scene);
 
 		const player = new Player(scene, playerController);
 		this._player = player;
 		gameLoop.add(player);
 
-		world.cameraManager?.follow(player.mesh)
-		world.shadowGenerator.addShadowCaster(player.mesh);
+		this._cameraManager.follow(player.mesh);
 	}
 
 	public dispose(): void {
