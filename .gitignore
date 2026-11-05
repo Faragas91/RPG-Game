@@ -44,6 +44,10 @@ out/
 # Babylon / Havok temp
 *.wasm.map
 
+# Babylon Editor generated caches (keep public/scene committed so clones run without npm run generate)
+.bjseditor/
+assets/.export-cache.json
+
 # md files
 AGENTS.md
 MILESTONES.md
