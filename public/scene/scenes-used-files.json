@@ -1,0 +1,17 @@
+{
+	"level01.scene": [
+		"level01/fa4be5bf-7e53-4da5-8976-f2f037d975df.babylonbinarymeshdata",
+		"level01/d2a60991-6acc-4d76-b3d8-67e1d6662870.babylonbinarymeshdata",
+		"level01/0310f515-6ba9-4af0-a629-992629053bc1.babylonbinarymeshdata",
+		"level01/1133e3e0-1161-4e73-aaf1-4d310e6aafd3.babylonbinarymeshdata",
+		"level01/0ba89c0a-1fc1-414a-af14-ffbc7ee3200d.babylonbinarymeshdata",
+		"assets/albedo.png",
+		"assets/amiga.jpg",
+		"assets/country.env",
+		"assets/albedo_256_256.png",
+		"assets/albedo_128_128.png",
+		"assets/amiga_64_64.jpg",
+		"assets/amiga_32_32.jpg",
+		"level01.babylon"
+	]
+}
