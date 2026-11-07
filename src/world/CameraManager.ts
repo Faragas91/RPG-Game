@@ -16,27 +16,27 @@ export class CameraManager {
 	}
 
 	private _createFollowCamera(): ArcRotateCamera {
-		this._activeCamera = new ArcRotateCamera(
+		const follow = new ArcRotateCamera(
 			"followCamera",
 			-Math.PI / 4,
 			1.2,
 			700,
-			new Vector3(0, 100, 0),
+			new Vector3(0, 50, 0),
 			this._scene,
 		);
-		this._activeCamera.attachControl();
-		this._activeCamera.lowerBetaLimit = 0.2;
-		this._activeCamera.upperBetaLimit = 1.45;
-		this._activeCamera.lowerRadiusLimit = 400;
-		this._activeCamera.upperRadiusLimit = 1000;
-		this._activeCamera.panningSensibility = 0;
-		this._activeCamera.wheelDeltaPercentage = 0.01;
-		this._activeCamera.inertia = 0.8;
-		return this._activeCamera;
+		follow.attachControl();
+		follow.lowerBetaLimit = 0.2;
+		follow.upperBetaLimit = 1.45;
+		follow.lowerRadiusLimit = 400;
+		follow.upperRadiusLimit = 1000;
+		follow.panningSensibility = 0;
+		follow.wheelDeltaPercentage = 0.01;
+		follow.inertia = 0.8;
+		return follow;
 	}
 
 	private _createIsoCamera(): ArcRotateCamera {
-		this._activeCamera = new ArcRotateCamera(
+		const iso = new ArcRotateCamera(
 			"isoCamera",
 			-Math.PI / 4,
 			1.2,
@@ -44,18 +44,18 @@ export class CameraManager {
 			new Vector3(0, 100, 0),
 			this._scene,
 		);
-		this._activeCamera.mode = Camera.ORTHOGRAPHIC_CAMERA;
-		this._activeCamera.alpha = -Math.PI / 4;          // 45° Yaw, wie Follow-Kamera
-		this._activeCamera.beta = Math.atan(Math.SQRT2);  // ≈ 0.9553 rad → echte Iso-Elevation 35,26°
-		this._activeCamera.radius = 2000;
-		this._activeCamera.lowerRadiusLimit = this._activeCamera.upperRadiusLimit = 2000;
-		this._activeCamera.minZ = 0.1;
-		this._activeCamera.maxZ = 10000;
-		return this._activeCamera;
+		iso.mode = Camera.ORTHOGRAPHIC_CAMERA;
+		iso.alpha = -Math.PI / 4;          // 45° Yaw, wie Follow-Kamera
+		iso.beta = Math.atan(Math.SQRT2);  // ≈ 0.9553 rad → echte Iso-Elevation 35,26°
+		iso.radius = 2000;
+		iso.lowerRadiusLimit = iso.upperRadiusLimit = 2000;
+		iso.minZ = 0.1;
+		iso.maxZ = 10000;
+		return iso;
 	}
 
 	get activeCamera(): ArcRotateCamera {
-		return this._activeCamera!;
+		return this._activeCamera;
 	}
 
 	follow(target: AbstractMesh): void {
@@ -72,14 +72,4 @@ export class CameraManager {
     		this._scene.activeCamera = this._activeCamera;
 		}
 	}
-
-	_updateOrhtoBounds() {
-
-	}
-
-	dispose() {
-
-	}
-
-
 }

@@ -34,6 +34,7 @@ import { PlayerController } from "./game/PlayerController";
 import { CameraManager } from "./world/CameraManager";
 import { LevelLoader } from "./world/LevelLoader";
 import { scriptsMap } from "./scripts";
+import { Mesh } from "@babylonjs/core";
 
 export class App {
 	private _canvas: HTMLCanvasElement;
@@ -108,10 +109,13 @@ export class App {
 		// Gameplay camera(s) install after the editor scene so they win activeCamera.
 		this._cameraManager = new CameraManager(scene);
 
-		const player = new Player(scene, playerController);
-		this._player = player;
-		gameLoop.add(player);
-
+		const playerMesh = scene.getMeshByName("player");
+		if (!(playerMesh instanceof Mesh)) {
+			throw new Error('Editor scene is missing a mesh named "player".');
+		}
+		const player = new Player(playerMesh, playerController);
+		this._player = player
+		this._gameLoop.add(player);
 		this._cameraManager.follow(player.mesh);
 	}
 

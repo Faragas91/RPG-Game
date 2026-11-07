@@ -26,9 +26,6 @@ export class PlayerController {
             if (event.type === KeyboardEventTypes.KEYUP) {
                 this.keys[key] = false
             }
-
-
-
         });   
     }
 
